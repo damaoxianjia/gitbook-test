@@ -1,0 +1,36 @@
+language: node_js
+node_js:
+  - "10"
+cache: npm
+
+notifications:
+  email:
+    recipients:
+      - abc@gmail.com
+    on_success: change
+    on_failure: always
+
+install:
+  - npm install
+  - npx gitbook install
+
+script:
+  - npx gitbook build
+
+after_script:
+  # - git config user.name ""
+  # - git config user.email ""
+  - cd _book
+  - git init
+  - git remote add origin https://${REF}
+  - git add .
+  - git commit -m "Updated By Travis-CI With Build $TRAVIS_BUILD_NUMBER For Github Pages"
+  - git push --force --quiet "https://${TOKEN}@${REF}" master:gh-pages
+
+branches:
+  only:
+    - master
+
+env:
+  global:
+    - REF=github.com/damaoxianjia/gitbook-test.git
