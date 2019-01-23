@@ -1,0 +1,33 @@
+language: node_js
+cache: npm
+
+# notifications:
+#   email:
+#     recipients:
+#       - gaoyibobobo@gmail.com
+#     on_success: change
+#     on_failure: always
+
+install:
+  - npm install
+  - npx gitbook install
+
+script:
+  # - npx gitbook build . docs
+  - npx gitbook build
+
+after_script:
+  - git config user.name "damaoxianjia"
+  - git config user.email "e636369@entropage.com"
+  # - cd docs
+  - cd _book
+  - git init
+  - git remote add origin https://github.com/damaoxianjia/gitbook-test.git
+  - git add .
+  - git commit -m "Update Blog By Travis-CI With Build $TRAVIS_BUILD_NUMBER For Github Pages"
+  - git push --force --quiet "https://${CI_TOKEN}@github.com/damaoxianjia/gitbook-test.git" master:master
+
+branches:
+  only:
+    - master
+
